@@ -1,8 +1,6 @@
 bfamRssApp.controller("mainController", ["$scope", "$location", "$http", "$sce", function ($scope, $location, $http, $sce) {
 
-    getAllFeeds();
-
-    function getAllFeeds() {
+    $scope.getAllFeeds = function () {
         $http({
             url: "/api/feedsService/getAllArticles",
             method: "GET"

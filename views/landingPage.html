@@ -1,0 +1,9 @@
+<div ng-init="getAllFeeds()"></div>
+<div ng-repeat="feed in feedList">
+    {{feed.title}}
+    <br> {{feed.published}}
+    <br> {{feed.author}}
+    <br>
+    <a ng-href="{{feed.link}}">Click here for more!</a>
+    <p ng-bind-html="feed.content"></p>
+</div>

@@ -1,0 +1,24 @@
+{
+  "name": "bfam_rss",
+  "version": "1.0.0",
+  "description": "BFAM RSS Feeds",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Gian Lendl V. Bata",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "feed-read": "0.0.1",
+    "mongodb": "^2.1.18",
+    "mongoose": "^4.5.1"
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3",
+    "nodemon": "^1.9.2"
+  }
+}

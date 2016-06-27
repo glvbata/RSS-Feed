@@ -1,0 +1,1 @@
+var bfamRssApp = angular.module("bfamRssApp", ['ngSanitize']);

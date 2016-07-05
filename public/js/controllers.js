@@ -1,38 +1,21 @@
 bfamRssApp.controller("mainController", ["$scope", "$location", "$http", "$sce", "$window", function ($scope, $location, $http, $sce, $window) {
 
     $scope.initializeLandingPage = function () {
-        $scope.feedLimit = 5;
+        $scope.articleLimit = 5;
     }
 
     $scope.loadMore = function () {
-        $scope.feedLimit += 2;
+        $scope.articleLimit += 2;
     }
 
-    $scope.getAllFeeds = function () {
+    $scope.getAllArticles = function () {
         $http({
             url: "/api/feedsService/getAllArticles",
             method: "GET"
         }).success(function (data, status, header, config) {
-            $scope.feedList = data;
+            $scope.articleList = data;
         }).error(function (data, status, header, config) {});
     };
-
-    $scope.getOneFeed = function () {
-
-    }
-
-    $scope.deleteFeed = function () {
-
-
-    }
-
-    $scope.updateFeed = function () {
-
-    }
-
-    $scope.insertFeed = function () {
-
-    }
 
     angular.element($window).bind("scroll", function () {
         var windowHeight = window.innerHeight;

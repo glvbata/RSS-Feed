@@ -40,21 +40,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-// Test for running queries.
-app.get("/api/test", function (request, response) {
-    var feeds = [
-        {
-            sourceFeedUrl: "http://kotaku.com/vip.xml"
-        },
-        {
-            sourceFeedUrl: "http://feeds.feedburner.com/Destructoid"
-        }
-    ];
 
-    db.collection(COLLECTION_FEEDS).insertMany(feeds);
-
-    response.send("test success");
-})
 
 // Get a feed by ID
 app.get("api/feedsService/get/:id", function (request, response) {

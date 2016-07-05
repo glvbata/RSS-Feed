@@ -1,4 +1,4 @@
-<div ng-init="getAllFeeds(); initializeLandingPage();"></div>
+<div ng-init="getAllArticles(); initializeLandingPage();"></div>
 
 <!--
 Filter references
@@ -7,20 +7,18 @@ http://www.encodedna.com/angularjs/tutorial/show-descending-date-in-angular-usin
 
 https://docs.angularjs.org/api/ng/filter/date
 -->
-
-
-<div ng-repeat="feed in feedList | filter:search_query | orderBy: '-published' | limitTo:feedLimit">
+<div ng-repeat="article in articleList | filter:search_query | orderBy: '-published' | limitTo:articleLimit">
     <div class="card">
         <div class="card-content">
-            <span class="card-title">{{feed.feed.name}} - {{feed.title}} </span>
+            <span class="card-title">{{article.feed.name}} - {{feed.title}} </span>
 
-            <p ng-bind-html="feed.content "></p>
+            <p ng-bind-html="article.content"></p>
         </div>
 
         <div class="card-action">
-            <span>{{feed.author}}</span>
-            <span>{{feed.published | date: "fullDate"}} {{feed.published | date: "mediumTime"}}</span>
-            <a ng-href="{{feed.link}}">Click here for more!</a>
+            <span>{{article.author}}</span>
+            <span>{{article.published | date: "fullDate"}} {{article.published | date: "mediumTime"}}</span>
+            <a ng-href="{{article.link}}">Click here for more!</a>
         </div>
     </div>
 </div>

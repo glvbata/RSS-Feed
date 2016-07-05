@@ -1,1 +1,17 @@
-<h4>Edit Feeds</h4>
+<table class="table table-striped">
+    <thead>
+        <td>Name</td>
+        <td>Url</td>
+        <td></td>
+    </thead>
+
+    <tbody>
+        <tr ng-repeat="feeds in feedList">
+            <td ng-bind="feeds.sourceName">test</td>
+            <td ng-bind="feeds.sourceFeedUrl">test1</td>
+            <td>
+                <button type="button">Edit</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

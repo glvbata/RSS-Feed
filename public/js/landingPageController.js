@@ -1,5 +1,4 @@
-bfamRssApp.controller("mainController", ["$scope", "$location", "$http", "$sce", "$window", function ($scope, $location, $http, $sce, $window) {
-
+bfamRssApp.controller("landingPageController", ["$scope", "$http", "$sce", "$window", function ($scope, $http, $sce, $window) {
     $scope.initializeLandingPage = function () {
         $scope.articleLimit = 5;
     }
@@ -10,7 +9,7 @@ bfamRssApp.controller("mainController", ["$scope", "$location", "$http", "$sce",
 
     $scope.getAllArticles = function () {
         $http({
-            url: "/api/feedsService/getAllArticles",
+            url: "/api/articlesService",
             method: "GET"
         }).success(function (data, status, header, config) {
             $scope.articleList = data;

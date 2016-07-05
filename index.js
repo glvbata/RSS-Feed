@@ -9,6 +9,7 @@ var Feed = require("./models/feed.js");
 
 // bfam-main 123456
 var mongoClient = require("mongodb");
+var ObjectId = mongoClient.ObjectId;
 var db;
 const COLLECTION_FEEDS = "feeds";
 
@@ -40,6 +41,9 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+// Used to parse json objects.
+app.use(bodyParser.json());
+
 
 
 // Get a feed by ID
@@ -56,7 +60,7 @@ app.get("api/feedsService/get/:id", function (request, response) {
 });
 
 // Get all feed.
-app.get("/api/feedsService/getAllFeeds", function (request, response) {
+app.get("/api/feedsService", function (request, response) {
     var cursor = db.collection(COLLECTION_FEEDS).find();
     var feeds = cursor.toArray(function (error, result) {
         response.send(result);
@@ -64,7 +68,7 @@ app.get("/api/feedsService/getAllFeeds", function (request, response) {
 });
 
 // Get all articles
-app.get("/api/feedsService/getAllArticles", function (request, response) {
+app.get("/api/articlesService", function (request, response) {
     var cursor = db.collection(COLLECTION_FEEDS).find({}, {
         sourceFeedUrl: 1
     });
@@ -85,25 +89,29 @@ app.get("/api/feedsService/getAllArticles", function (request, response) {
 });
 
 // Update a feed by ID
-app.put("/api/feedsService/update/:id", function (request, response) {
-    var updatedFeed = request.body;
-    delete updatedFeed._id;
+app.put("/api/feedsService", function (request, response) {
+    var feed = request.body;
 
-    db.collection(COLLECTION_FEEDS).updateOne({
-        _id: new ObjectID(request.params.id)
-    }, updatedFeed, function (error, result) {
-        if (error) {
-            // error
-        } else {
-            response.status(200).end();
+    db.collection(COLLECTION_FEEDS).update({
+        "_id": new ObjectId(feed._id)
+    }, {
+        $set: {
+            "sourceName": feed.sourceName,
+            "sourceFeedUrl": feed.sourceFeedUrl
         }
-    })
+    }, function (error, result) {
+        if (error) {
+            // error    
+        } else {
+            response.status(200).send(result);
+        }
+    });
 })
 
 // Delete a feed by ID
-app.delete("/api/feedsService/delete/:id", function (request, response) {
+app.delete("/api/feedsService/:id", function (request, response) {
     db.collection(COLLECTION_FEEDS).deleteOne({
-        _id: new ObjectID(request.params.id)
+        _id: new ObjectId(request.params.id)
     }, function (error, result) {
         if (error) {
             // error    
@@ -114,19 +122,13 @@ app.delete("/api/feedsService/delete/:id", function (request, response) {
 })
 
 // Insert a feed
-app.post("/api/feedsService/insert", function (request, response) {
+app.post("/api/feedsService", function (request, response) {
     var newFeed = request.body;
 
     if (!(newFeed.sourceName || newFeed.sourceFeedUrl)) {
         //error
+    } else {
+        db.collection(COLLECTION_FEEDS).insert(newFeed);
+        response.status(200).end();
     }
-
-    db.collection(COLLECTION_FEEDS).insertOne(newFeed, function (error, result) {
-        if (error) {
-            //log
-        } else {
-            // find out what this does.
-            response.status(201).json(result.ops[0]);
-        }
-    });
 })

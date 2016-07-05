@@ -1,17 +1,55 @@
-<table class="table table-striped">
-    <thead>
-        <td>Name</td>
-        <td>Url</td>
-        <td></td>
-    </thead>
+<div ng-init="getAllFeeds()">
+    <table class="table table-striped">
+        <thead>
+            <td>Name</td>
+            <td>Url</td>
+            <td></td>
+        </thead>
 
-    <tbody>
-        <tr ng-repeat="feeds in feedList">
-            <td ng-bind="feeds.sourceName">test</td>
-            <td ng-bind="feeds.sourceFeedUrl">test1</td>
-            <td>
-                <button type="button">Edit</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+        <tbody>
+            <div>
+                <tr ng-show="isAdding">
+                    <td>
+                        <input input="text" ng-model="newFeed.sourceName">
+                    </td>
+                    <td>
+                        <input input="text" ng-model="newFeed.sourceFeedUrl">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" ng-click="insertFeed(newFeed)">Save</button>
+                    </td>
+                </tr>
+            </div>
+
+
+            <tr ng-repeat="feed in feedList">
+                <td>
+                    <div ng-hide="feed.isEditing" ng-bind="feed.sourceName"></div>
+                    <div ng-show="feed.isEditing">
+                        <input type="text" ng-bind="feed.sourceName" ng-model="feed.sourceName">
+                    </div>
+                </td>
+
+                <td>
+                    <div ng-hide="feed.isEditing" ng-bind="feed.sourceFeedUrl"></div>
+                    <div ng-show="feed.isEditing">
+                        <input type="text" value={{feed.sourceFeedUrl}} ng-model="feed.sourceFeedUrl">
+                    </div>
+                </td>
+
+                <td>
+                    <div ng-hide="feed.isEditing">
+                        <button type="button" class="btn btn-primary" ng-click="toggleEdit(feed)">Edit</button>
+                        <button type=button class="btn btn-secondary" ng-click="deleteFeed(feed._id)">Delete</button>
+                    </div>
+
+                    <div ng-show="feed.isEditing">
+                        <button type="button" class="btn btn-primary" ng-click="updateFeed(feed)">Save</button>
+                        <button type="button" class="btn btn-secondary" ng-click="toggleEdit(feed)">Cancel</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button ng-init="isAdding = false; addButton = 'Add';" type="button" ng-class="{'btn btn-primary pull-right' : addButton === 'Add', 'btn btn-secondary pull-right' : addButton === 'Cancel'}" ng-click="toggleAdd()" ng-bind="addButton"></button>
+</div>

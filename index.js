@@ -8,10 +8,14 @@ var port = 1337;
 var Feed = require("./models/feed.js");
 
 // bfam-main 123456
+var mongoose = require("mongoose");
 var mongoClient = require("mongodb");
 var ObjectId = mongoClient.ObjectId;
 var db;
 const COLLECTION_FEEDS = "feeds";
+
+var feedService = require("./routes/feedService.js");
+app.use("/api", feedService);
 
 // include the public folder
 app.use(express.static(__dirname + "/public"));
@@ -35,6 +39,7 @@ mongoClient.connect("mongodb://bfam-main:123456@ds047602.mlab.com:47602/bfam-rss
     var server = app.listen(port, serverStatus);
 });
 
+// Handles Parsing
 // Since express can't parse forms on its own, we have required this middleware(plugin) to do it.
 // urlencoded method parses data from the form and sets it to a body attribute for the request.
 app.use(bodyParser.urlencoded({

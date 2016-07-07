@@ -1,10 +1,10 @@
 // Middlewares
 var express = require("express");
 var app = express();
+var port = process.env.PORT || 1337;
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 var path = require("path");
-var port = process.env.PORT || 1337;
 
 // bfam-main 123456
 mongoose.connect("mongodb://bfam-main:123456@ds047602.mlab.com:47602/bfam-rss");
@@ -21,28 +21,11 @@ app.use(bodyParser.urlencoded({
 })); // Used to parse data from the form and sets it to a body attribute for the request.
 app.use(bodyParser.json()); // Used to parse json objects.
 
-
 // Handles the feed service
 var feedService = require("./routes/feedService.js");
+var userService = require("./routes/userService.js");
 app.use("/api", feedService);
-
-
-app.get("/loginTest", function (request, response) {
-    // Small caps for file name!
-    response.sendFile(path.join(__dirname + "/views/loginPage.html"));
-});
-
-app.post("/login", function (request, response) {
-    var loginInfo = request.body;
-
-    response.send(loginInfo);
-});
-
-app.post("/register", function (request, response) {
-    var newUser = request.body;
-
-    response.send(newUser);
-})
+app.use("/api", userService);
 
 // Run Server
 var serverStatus = function () {

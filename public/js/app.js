@@ -9,6 +9,12 @@ bfamRssApp.config(["$routeProvider", function ($routeProvider) {
     }).when("/edit-feeds", {
         templateUrl: "editFeeds.html",
         controller: "editController"
+    }).when("/login", {
+        templateUrl: "loginPage.html",
+        controller: "userController"
+    }).when("/register", {
+        templateUrl: "registrationPage.html",
+        controller: "userController"
     }).otherwise({
         redirectTo: "/"
     });

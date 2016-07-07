@@ -5,15 +5,6 @@ bfamRssApp.controller("editController", ["$scope", "$http", function ($scope, $h
         }
     }
 
-    $scope.getAllFeeds = function () {
-        $http.get("/api/feedsService").success(function (data, status) {
-            $scope.feedList = data;
-            setIsEditingFeed();
-        }).error(function (data, status) {
-
-        });
-    }
-
     $scope.toggleEdit = function (feed) {
         feed.isEditing = !feed.isEditing;
 
@@ -32,11 +23,30 @@ bfamRssApp.controller("editController", ["$scope", "$http", function ($scope, $h
         }
     }
 
+    $scope.getAllFeeds = function () {
+        $http.get("/api/feeds").success(function (data, status) {
+            $scope.feedList = data;
+            setIsEditingFeed();
+        }).error(function (data, status) {
+
+        });
+    }
+
+    $scope.insertFeed = function (feed) {
+        $http.post("api/feeds", feed).success(function (data, status) {
+            console.log(status);
+            $scope.toggleAdd();
+            $scope.getAllFeeds();
+        }).error(function (data, status) {
+            console.log(status);
+        });
+    }
+
     $scope.updateFeed = function (feed) {
         if ($scope.temporaryFeed.sourceName === feed.sourceName && $scope.temporaryFeed.sourceFeedUrl === feed.sourceFeedUrl) {
             // Did not edit, no need to update. 
         } else {
-            $http.put("/api/feedsService", feed).success(function (data, status) {
+            $http.put("/api/feeds/" + feed._id, feed).success(function (data, status) {
                 console.log(status);
             }).error(function (data, status) {
                 console.log(status);
@@ -46,18 +56,8 @@ bfamRssApp.controller("editController", ["$scope", "$http", function ($scope, $h
         feed.isEditing = false;
     }
 
-    $scope.insertFeed = function (feed) {
-        $http.post("api/feedsService", feed).success(function (data, status) {
-            console.log(status);
-            $scope.toggleAdd();
-            $scope.getAllFeeds();
-        }).error(function (data, status) {
-            console.log(status);
-        });
-    }
-
     $scope.deleteFeed = function (feedId) {
-        $http.delete("/api/feedsService/" + feedId).success(function (data, status) {
+        $http.delete("/api/feeds/" + feedId).success(function (data, status) {
             console.log(status);
             $scope.getAllFeeds();
         }).error(function (data, status) {

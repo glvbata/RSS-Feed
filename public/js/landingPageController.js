@@ -9,7 +9,7 @@ bfamRssApp.controller("landingPageController", ["$scope", "$http", "$sce", "$win
 
     $scope.getAllArticles = function () {
         $http({
-            url: "/api/articlesService",
+            url: "/api/feeds/articles",
             method: "GET"
         }).success(function (data, status, header, config) {
             $scope.articleList = data;

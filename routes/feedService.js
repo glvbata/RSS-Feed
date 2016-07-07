@@ -25,6 +25,20 @@ router.route("/feeds/articles").get(function (request, response) {
 
                 if (i === theArray.length - 1) {
                     feedRead(sourceFeedUrlList, function (err, articles) {
+                        articles.forEach(function (currentArticle) {
+                            var re = /<img[^>]+src="?([^"\s]+)"?[^>]*\/>/g;
+                            var results = re.exec(currentArticle.content);
+                            var img = "";
+                            if (results) {
+                                img = results[0];
+                            }
+
+                            currentArticle.testImage = img
+                            currentArticle.content = truncate(currentArticle.content, 500, {
+                                keepImageTag: false
+                            });
+                        });
+
                         response.status(200).json(articles);
                     })
                 }

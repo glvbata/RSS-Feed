@@ -2,7 +2,7 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
-var port = 1337;
+var port = process.env.PORT || 1337;
 
 // bfam-main 123456
 var mongoose = require("mongoose");

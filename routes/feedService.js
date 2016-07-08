@@ -3,16 +3,6 @@ var router = express.Router();
 var Feed = require("../models/feed.js");
 var feedRead = require("feed-read");
 
-router.route("/feeds").get(function (request, response) {
-    Feed.find(function (error, feeds) {
-        if (error) {
-            response.status(500).send(error);
-        } else {
-            response.status(200).json(feeds);
-        }
-    });
-});
-
 router.route("/feeds/articles").get(function (request, response) {
     Feed.find(function (error, feeds) {
         if (error) {
@@ -29,6 +19,16 @@ router.route("/feeds/articles").get(function (request, response) {
                     })
                 }
             });
+        }
+    });
+});
+
+router.route("/feeds").get(function (request, response) {
+    Feed.find(function (error, feeds) {
+        if (error) {
+            response.status(500).send(error);
+        } else {
+            response.status(200).json(feeds);
         }
     });
 });

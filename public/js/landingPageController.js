@@ -8,10 +8,7 @@ bfamRssApp.controller("landingPageController", ["$scope", "$http", "$sce", "$win
     }
 
     $scope.getAllArticles = function () {
-        $http({
-            url: "/api/feeds/articles",
-            method: "GET"
-        }).success(function (data, status, header, config) {
+        $http.get("/api/feeds/articles").success(function (data, status, header, config) {
             $scope.articleList = data;
         }).error(function (data, status, header, config) {});
     };

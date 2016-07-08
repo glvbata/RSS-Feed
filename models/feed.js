@@ -8,4 +8,4 @@ var feedSchema = new Schema({
 
 //var feedSchema = new Schema({});
 
-module.exports = mongoose.model("Feed", feedSchema);
+module.exports = mongoose.model("feed", feedSchema);

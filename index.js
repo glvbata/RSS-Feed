@@ -27,6 +27,34 @@ var userService = require("./routes/userService.js");
 app.use("/api", feedService);
 app.use("/api", userService);
 
+// PASSPORT STUFF
+var cookieParser = require('cookie-parser');
+var passport = require('passport');
+
+require('./models/user.js');
+require('./passport.js');
+app.use(passport.initialize());
+app.use("/api", userService);
+var editController = require('./controllers/editController.js');
+
+var jwt = require('express-jwt');
+var auth = jwt({
+    secret: 'MY_SECRET',
+    userProperty: 'payload'
+});
+app.get("/edit-feeds", auth, editController.profileRead);
+
+
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.status(401);
+        res.json({
+            "message": err.name + ": " + err.message
+        });
+    }
+});
+// PASSPORT STUFF
+
 // Run Server
 var serverStatus = function () {
     var host = "localhost";

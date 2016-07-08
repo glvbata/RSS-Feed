@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var User = require("../models/user.js");
+var passport = require('passport');
 
 router.route("/user").get(function (request, response) {
     User.find(function (error, users) {
@@ -45,7 +46,27 @@ router.route("/user/:id").put(function (request, response) {
 
 
 router.route("/user/login").post(function (request, response) {
-    response.send(request.body);
+    passport.authenticate('local', function (error, user, info) {
+        var token;
+
+        // If Passport throws/catches an error
+        if (error) {
+            response.status(404).json(error);
+            return;
+        }
+
+        // If a user is found
+        if (user) {
+            token = user.generateJwt();
+            response.status(200);
+            response.json({
+                "token": token
+            });
+        } else {
+            // If user is not found
+            response.status(401).json(info);
+        }
+    })(request, response);
 });
 
 router.route("/user/register").post(function (request, response) {
@@ -54,9 +75,17 @@ router.route("/user/register").post(function (request, response) {
     user.lastName = request.body.lastName;
     user.email = request.body.email;
     user.username = request.body.username;
-    user.password = request.body.password;
 
-    response.send(user);
+    user.setPassword(request.body.password);
+
+    user.save(function (err) {
+        var token;
+        token = user.generateJwt();
+        response.status(200);
+        response.json({
+            "token": token
+        });
+    });
 });
 
 module.exports = router;

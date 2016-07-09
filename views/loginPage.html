@@ -14,7 +14,7 @@
         <span class="span-or">or</span>
     </div>
 
-    <form role="form">
+    <form role="form" ng-submit="onSubmitLogin(user)">
         <div class="form-group">
             <label for="inputUsername">Username</label>
             <input type="text" class="form-control" id="inputUsername" ng-model="user.username">
@@ -31,7 +31,7 @@
                 <input type="checkbox"> Remember me </label>
         </div>
 
-        <button type="submit" class="btn btn btn-primary" ng-click="login(user)">
+        <button type="submit" class="btn btn btn-primary">
             Log In
         </button>
     </form>

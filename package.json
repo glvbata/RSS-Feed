@@ -22,7 +22,8 @@
     "jsonwebtoken": "^7.0.1",
     "mongodb": "^2.1.18",
     "mongoose": "^4.5.1",
-    "multer": "^1.1.0"
+    "multer": "^1.1.0",
+    "serve-favicon": "^2.3.0"
   },
   "devDependencies": {
     "mocha": "^2.5.3",

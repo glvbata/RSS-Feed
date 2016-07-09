@@ -1,10 +1,12 @@
 // Middlewares
 var express = require("express");
 var app = express();
-var port = process.env.PORT || 1337;
+var port = process.env.PORT || 999;
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 var path = require("path");
+var favicon = require('serve-favicon');
+
 
 // bfam-main 123456
 mongoose.connect("mongodb://bfam-main:123456@ds047602.mlab.com:47602/bfam-rss");
@@ -21,11 +23,10 @@ app.use(bodyParser.urlencoded({
 })); // Used to parse data from the form and sets it to a body attribute for the request.
 app.use(bodyParser.json()); // Used to parse json objects.
 
-// Handles the feed service
+// Handles the feed services
 var feedService = require("./routes/feedService.js");
 var userService = require("./routes/userService.js");
 app.use("/api", feedService);
-app.use("/api", userService);
 
 // PASSPORT STUFF
 var cookieParser = require('cookie-parser');
@@ -42,8 +43,8 @@ var auth = jwt({
     secret: 'MY_SECRET',
     userProperty: 'payload'
 });
-app.get("/edit-feeds", auth, editController.profileRead);
 
+app.get("/edit-feeds", auth, editController.profileRead);
 
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {

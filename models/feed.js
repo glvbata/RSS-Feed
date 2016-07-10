@@ -6,6 +6,4 @@ var feedSchema = new Schema({
     sourceFeedUrl: String
 });
 
-//var feedSchema = new Schema({});
-
 module.exports = mongoose.model("feed", feedSchema);

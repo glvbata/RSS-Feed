@@ -1,12 +1,5 @@
-bfamRssApp.controller("navigationController", ["$scope", "$location", "authenticationService", function ($scope, $location, authenticationService) {
+bfamRssApp.controller("navigationController", ["$scope", "$location", function ($scope, $location) {
     var path = $location.path();
-
-    $scope.isLoggedIn = authenticationService.isLoggedIn();
-    $scope.currentUser = authenticationService.currentUser();
-
-    $scope.logout = function () {
-        authenticationService.logout();
-    }
 
     switch (path) {
     case "/":

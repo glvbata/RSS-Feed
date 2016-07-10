@@ -14,7 +14,7 @@
         <span class="span-or">or</span>
     </div>-->
 
-    <form role="form" ng-submit="onSubmitLogin(user)">
+    <form role="form" ng-submit="loginUser(user)">
         <div class="form-group">
             <label for="inputUsername">Username</label>
             <input type="text" class="form-control" id="inputUsername" ng-model="user.username">
@@ -24,10 +24,10 @@
             <a class="pull-right" href="#">Forgot password?</a>
             <label for="inputPassword">Password</label>
             <input type="password" class="form-control" id="inputPassword" ng-model="user.password">
-        </div>
 
-        <button type="submit" class="btn btn btn-primary">
-            Log In
-        </button>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn btn-primary">Log In</button>
+            </div>
     </form>
 </div>

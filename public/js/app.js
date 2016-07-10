@@ -58,7 +58,6 @@ bfamRssApp.service("authenticationService", ["$http", "$window", "$rootScope", f
                 firstName: payload.firstName,
                 lastName: payload.lastName,
                 username: payload.username,
-                email: payload.email
             };
         }
     };

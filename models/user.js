@@ -38,7 +38,6 @@ userSchema.methods.validPassword = function (password) {
 };
 
 //This module exposes a sign method that we can use to create a JWT, simply passing it the data we want to include in the token, plus a secret that the hashing algorithm will use. The data should be sent as a JavaScript object, and include an expiry date in an exp property.
-
 //Note: It is important that your secret is kept safe – only the originating server should know what it is. It is best practice to set the secret as an environment variable, and not have it in the source code, especially if your code is stored in version control somewhere.
 userSchema.methods.generateJwt = function () {
     var expiry = new Date();
@@ -48,7 +47,6 @@ userSchema.methods.generateJwt = function () {
         _id: this._id,
         firstName: this.firstName,
         lastName: this.lastName,
-        email: this.email,
         username: this.username,
         exp: parseInt(expiry.getTime() / 1000),
     }, "MY_SECRET"); // DO NOT KEEP YOUR SECRET IN THE CODE!

@@ -2,9 +2,7 @@
 
 <!--
 Filter references
-
 http://www.encodedna.com/angularjs/tutorial/show-descending-date-in-angular-using-ngrepeat-orderby-filter.htm
-
 https://docs.angularjs.org/api/ng/filter/date
 -->
 <div ng-repeat="article in articleList | filter:search_query | orderBy: '-published' | limitTo:articleLimit">

@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
-var User = require("../models/user.js");
 var passport = require('passport');
+var User = require("../models/user.js");
 
 router.route("/user").get(function (request, response) {
     User.find(function (error, users) {
@@ -30,8 +30,7 @@ router.route("/user/:id").put(function (request, response) {
         } else {
             user.firstName = request.body.firstName;
             user.lastName = request.body.lastName;
-            user.email = request.body.email;
-            user.password = request.body.password;
+            user.username = request.body.username;
 
             user.save(function (error) {
                 if (error) {
@@ -73,7 +72,6 @@ router.route("/user/register").post(function (request, response) {
     var user = new User();
     user.firstName = request.body.firstName;
     user.lastName = request.body.lastName;
-    user.email = request.body.email;
     user.username = request.body.username;
 
     user.setPassword(request.body.password);

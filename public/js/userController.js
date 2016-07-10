@@ -12,8 +12,8 @@ bfamRssApp.controller("userController", ["$scope", "$http", "$window", "$locatio
 
         $scope.onSubmitLogin = function (user) {
             authenticationService.login($scope.user)
-                .error(function (err) {
-                    alert(err);
+                .error(function (error) {
+                    console.log(error.message);
                 })
                 .then(function () {
                     $location.path('/edit-feeds');

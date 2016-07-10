@@ -8,6 +8,8 @@ var cookieParser = require('cookie-parser');
 var path = require("path");
 var passport = require('passport');
 var favicon = require('serve-favicon');
+var feedService = require("./routes/feedService.js");
+var userService = require("./routes/userService.js");
 
 // bfam-main 123456
 mongoose.connect("mongodb://bfam-main:123456@ds047602.mlab.com:47602/bfam-rss");
@@ -18,32 +20,16 @@ app.use(express.static(__dirname + "/views"));
 app.use(express.static(__dirname + "/controllers"));
 
 // Handles Parsing
-// Since express can't parse forms on its own, we have required this middleware(plugin) to do it.
-app.use(bodyParser.urlencoded({
-    extended: true
-})); // Used to parse data from the form and sets it to a body attribute for the request.
-app.use(bodyParser.json()); // Used to parse json objects.
+app.use(bodyParser.urlencoded({ extended: true})); 
+app.use(bodyParser.json());
 
-// Handles the feed service
-var feedService = require("./routes/feedService.js");
+// Handles the api services
 app.use("/api", feedService);
-
-// PASSPORT STUFF
-var userService = require("./routes/userService.js");
-
-require('./passport.js');
-app.use(passport.initialize());
 app.use("/api", userService);
-var editController = require('./controllers/editController.js');
 
-var jwt = require('express-jwt');
-var authorization = jwt({
-    secret: 'MY_SECRET',
-    userProperty: 'payload'
-});
-
-app.get("/edit-feeds", authorization, editController.profileRead);
-// PASSPORT STUFF
+// Handles Passport
+var passportConfig = require('./config/passport.js');
+app.use(passport.initialize());
 
 // Run Server
 var serverStatus = function () {

@@ -22,15 +22,15 @@ bfamRssApp.config(["$routeProvider", function ($routeProvider) {
 
 bfamRssApp.service("authenticationService", ["$http", "$window", "$rootScope", function ($http, $window, $rootScope) {
     var saveToken = function (token) {
-        $window.localStorage['mean-token'] = token;
+        $window.localStorage['user-token'] = token;
     };
 
     var getToken = function () {
-        return $window.localStorage['mean-token'];
+        return $window.localStorage['user-token'];
     };
 
     var logout = function () {
-        $window.localStorage.removeItem('mean-token');
+        $window.localStorage.removeItem('user-token');
     };
 
     var isLoggedIn = function () {

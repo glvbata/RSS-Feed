@@ -45,7 +45,7 @@ router.route("/user/:id").put(function (request, response) {
 
 
 router.route("/user/login").post(function (request, response) {
-    passport.authenticate('local', function (error, user, info) {
+    passport.authenticate("local", function (error, user, info) {
         var token;
 
         // If Passport throws/catches an error

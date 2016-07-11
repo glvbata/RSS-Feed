@@ -3,6 +3,11 @@ var Schema = mongoose.Schema;
 var crypto = require("crypto");
 var jwt = require("jsonwebtoken");
 
+var feedSchema = new Schema({
+    sourceName: String,
+    sourceFeedUrl: String
+});
+
 var userSchema = new Schema({
     firstName: {
         type: String,
@@ -12,17 +17,13 @@ var userSchema = new Schema({
         type: String,
         required: true
     },
-    email: {
-        type: String,
-        unique: true,
-        required: true
-    },
     username: {
         type: String,
         unique: true,
         required: true
     },
     password: String,
+    feeds: [feedSchema],
     salt: String,
     hash: String
 });

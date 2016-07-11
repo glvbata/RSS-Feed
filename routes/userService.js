@@ -43,7 +43,6 @@ router.route("/user/:id").put(function (request, response) {
     });
 });
 
-
 router.route("/user/login").post(function (request, response) {
     passport.authenticate("local", function (error, user, info) {
         var token;
@@ -73,7 +72,7 @@ router.route("/user/register").post(function (request, response) {
     user.firstName = request.body.firstName;
     user.lastName = request.body.lastName;
     user.username = request.body.username;
-
+    user.feeds = new Array();
     user.setPassword(request.body.password);
 
     user.save(function (err) {

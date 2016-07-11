@@ -1,4 +1,4 @@
-bfamRssApp.controller("editController", ["$scope", "$http", function ($scope, $http) {
+bfamRssApp.controller("editController", ["$scope", "$http", "authenticationService", function ($scope, $http, authenticationService) {
     function setIsEditingFeed() {
         for (var i = 0; i < $scope.feedList.length; i++) {
             $scope.feedList[i].isEditing = false;
@@ -24,16 +24,16 @@ bfamRssApp.controller("editController", ["$scope", "$http", function ($scope, $h
     }
 
     $scope.getAllFeeds = function () {
-        $http.get("/api/feeds").success(function (data, status) {
+        $http.get("/api/feeds/" + authenticationService.currentUser().username).success(function (data, status) {
             $scope.feedList = data;
             setIsEditingFeed();
         }).error(function (data, status) {
-
+            console.log(status);
         });
     }
 
     $scope.insertFeed = function (feed) {
-        $http.post("api/feeds", feed).success(function (data, status) {
+        $http.post("api/feeds/" + authenticationService.currentUser().username, feed).success(function (data, status) {
             console.log(status);
             $scope.toggleAdd();
             $scope.getAllFeeds();
@@ -46,7 +46,7 @@ bfamRssApp.controller("editController", ["$scope", "$http", function ($scope, $h
         if ($scope.temporaryFeed.sourceName === feed.sourceName && $scope.temporaryFeed.sourceFeedUrl === feed.sourceFeedUrl) {
             // Did not edit, no need to update. 
         } else {
-            $http.put("/api/feeds/" + feed._id, feed).success(function (data, status) {
+            $http.put("/api/feeds/" + authenticationService.currentUser().username + "/" + feed._id, feed).success(function (data, status) {
                 console.log(status);
             }).error(function (data, status) {
                 console.log(status);
@@ -57,8 +57,7 @@ bfamRssApp.controller("editController", ["$scope", "$http", function ($scope, $h
     }
 
     $scope.deleteFeed = function (feedId) {
-        $http.delete("/api/feeds/" + feedId).success(function (data, status) {
-            console.log(status);
+        $http.delete("/api/feeds/" + authenticationService.currentUser().username + "/" + feedId).success(function (data, status) {
             $scope.getAllFeeds();
         }).error(function (data, status) {
 

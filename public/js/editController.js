@@ -30,7 +30,7 @@ bfamRssApp.controller("editController", ["$scope", "$http", "authenticationServi
             $scope.feedList = data;
             setIsEditingFeed();
         }).error(function (data, status) {
-
+            console.log(status);
         });
     }
 
@@ -60,7 +60,6 @@ bfamRssApp.controller("editController", ["$scope", "$http", "authenticationServi
 
     $scope.deleteFeed = function (feedId) {
         $http.delete("/api/feeds/" + authenticationService.currentUser().username + "/" + feedId).success(function (data, status) {
-            console.log(status);
             $scope.getAllFeeds();
         }).error(function (data, status) {
 

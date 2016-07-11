@@ -7,7 +7,7 @@ var Feed = require("../models/feed.js");
 
 // If user is logged in
 router.route("/articles/:username").get(function (request, response) {
-    if (request.params.username === "guest") {
+    var getDefaultFeeds = function (response) {
         var sourceFeedUrlList = new Array();
 
         sourceFeedUrlList.push("http://kotaku.com/vip.xml");
@@ -16,12 +16,16 @@ router.route("/articles/:username").get(function (request, response) {
         feedRead(sourceFeedUrlList, function (err, articles) {
             response.status(200).json(articles);
         })
+    }
+
+    if (request.params.username === "guest") {
+        getDefaultFeeds(response);
     } else {
         User.findOne({
             username: request.params.username
         }, function (error, user) {
             // Default feed for user who has nothing
-            if (user.feeds) {
+            if (user.feeds.length > 0) {
                 var sourceFeedUrlList = new Array();
 
                 user.feeds.forEach(function (object, i, theArray) {
@@ -33,14 +37,7 @@ router.route("/articles/:username").get(function (request, response) {
                     }
                 });
             } else {
-                var sourceFeedUrlList = new Array();
-
-                sourceFeedUrlList.push("http://kotaku.com/vip.xml");
-                sourceFeedUrlList.push("http://feeds.feedburner.com/Destructoid");
-
-                feedRead(sourceFeedUrlList, function (err, articles) {
-                    response.status(200).json(articles);
-                })
+                getDefaultFeeds(response);
             }
         });
     }
@@ -57,7 +54,8 @@ router.route("/feeds/:username").get(function (request, response) {
                 if (user.feeds.length > 0) {
                     response.status(200).json(user.feeds);
                 } else {
-                    response.status(200).send("No feeds found.");
+                    // No feeds found, send empty array.
+                    response.status(200).json([]);
                 }
             }
         } else {
@@ -83,7 +81,7 @@ router.route("/feeds/:username/:sourceName").get(function (request, response) {
                     }
                 }
             } else {
-                response.status(200).json("No feeds found.");
+                response.status(503).json("No feeds found.");
             }
         }
     });

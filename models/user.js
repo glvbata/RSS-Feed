@@ -18,11 +18,6 @@ var userSchema = new Schema({
         type: String,
         required: true
     },
-    email: {
-        type: String,
-        unique: true,
-        required: true
-    },
     username: {
         type: String,
         unique: true,

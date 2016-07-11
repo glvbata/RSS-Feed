@@ -9,7 +9,7 @@ bfamRssApp.controller("landingPageController", ["$scope", "$http", "$sce", "$win
 
     $scope.getAllArticles = function () {
         if (authenticationService.isLoggedIn()) {
-            var currentUser = authenticationService.currentUser.username;
+            var currentUser = authenticationService.currentUser().username;
 
             $http.get("/api/articles/" + currentUser).success(function (data, status) {
                 $scope.articleList = data;

@@ -101,9 +101,9 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="collapseItems">
                     <ul class="nav navbar-nav">
-                        <li ng-class="{'active' : navigationTabs.homeTab}" data-toggle="collapse" data-target="#collapseItems"><a href="#/">Home</a></li>
-                        <li ng-class="{'active' : navigationTabs.editTab}" data-toggle="collapse" data-target="#collapseItems"><a href="#/edit-feeds">Edit Feeds</a></li>
-                        <li ng-class="{'active' : navigationTabs.aboutTab}" data-toggle="collapse" data-target="#collapseItems"><a href="#/about">About</a></li>
+                        <li ng-class="{'active' : navigationTabs.homeTab}"><a href="#/">Home</a></li>
+                        <li ng-class="{'active' : navigationTabs.editTab}"><a href="#/edit-feeds">Edit Feeds</a></li>
+                        <li ng-class="{'active' : navigationTabs.aboutTab}"><a href="#/about">About</a></li>
                     </ul>
 
                     <div ng-controller="userController">
@@ -118,14 +118,14 @@
                                 <input id="inputPassword" type="password" class="form-control" name="password" placeholder="Password" ng-model="user.password">
                             </div>
 
-                            <button type="submit" class="btn btn-primary" data-toggle="collapse" data-target="#collapseItems">Login</button>
+                            <button type="submit" class="btn btn-primary">Login</button>
                         </form>
 
                         <div ng-show="isLoggedIn" class="navbar-right">
                             <span class="navbar-brand" ng-cloak>Hi {{currentUser.firstName}}</span>
                             <form class="navbar-form navbar-right">
                                 <div class=" form-group ">
-                                    <button type="submit " class="btn btn-primary" ng-click="logoutUser()" data-toggle="collapse" data-target="#collapseItems">Logout</button>
+                                    <button type="submit " class="btn btn-primary " ng-click="logoutUser() ">Logout</button>
                                 </div>
                             </form>
                         </div>

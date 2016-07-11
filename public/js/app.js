@@ -1,4 +1,4 @@
-var bfamRssApp = angular.module("bfamRssApp", ["ngSanitize", "ngRoute"]);
+var bfamRssApp = angular.module("bfamRssApp", ["ngSanitize", "ngRoute", 'angular-loading-bar']);
 
 bfamRssApp.config(["$routeProvider", function ($routeProvider) {
     $routeProvider.when("/", {

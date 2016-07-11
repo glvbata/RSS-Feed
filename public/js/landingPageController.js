@@ -21,11 +21,11 @@ bfamRssApp.controller("landingPageController", ["$scope", "$http", "$sce", "$win
         }
     };
 
+    // Code snippet for detecting window/document scroll
     angular.element($window).bind("scroll", function () {
         var windowHeight = window.innerHeight;
         var body = document.body;
         var html = document.documentElement;
-
         var docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
 
         windowBottom = windowHeight + window.pageYOffset;

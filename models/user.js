@@ -2,7 +2,6 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var crypto = require("crypto");
 var jwt = require("jsonwebtoken");
-var Feed = require("./feed.js");
 
 var feedSchema = new Schema({
     sourceName: String,

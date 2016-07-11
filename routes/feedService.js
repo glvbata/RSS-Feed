@@ -3,7 +3,6 @@ var router = express.Router();
 var feedRead = require("feed-read");
 var mongoose = require("mongoose");
 var User = require("../models/user.js");
-var Feed = require("../models/feed.js");
 
 // If user is logged in
 router.route("/articles/:username").get(function (request, response) {
@@ -81,7 +80,8 @@ router.route("/feeds/:username/:sourceName").get(function (request, response) {
                     }
                 }
             } else {
-                response.status(503).json("No feeds found.");
+                // No feeds found, send empty array.
+                response.status(200).json([]);
             }
         }
     });
@@ -94,9 +94,10 @@ router.route("/feeds/:username").post(function (request, response) {
         if (error) {
 
         } else {
-            var feed = new Feed();
-            feed.sourceName = request.body.sourceName;
-            feed.sourceFeedUrl = request.body.sourceFeedUrl;
+            var feed = {
+                sourceName: request.body.sourceName,
+                sourceFeedUrl: request.body.sourceFeedUrl
+            };
 
             if (user.feeds == null) {
                 user.feeds = [feed];
@@ -142,7 +143,8 @@ router.route("/feeds/:username/:feedId").put(function (request, response) {
                     }
                 });
             } else {
-
+                // No feeds found, send empty array.
+                response.status(200).json([]);
             }
         }
     });
@@ -175,7 +177,8 @@ router.route("/feeds/:username/:feedId").delete(function (request, response) {
                     }
                 });
             } else {
-
+                // No feeds found, send empty array.
+                response.status(200).json([]);
             }
         }
     });

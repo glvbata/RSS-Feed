@@ -24,9 +24,7 @@ bfamRssApp.controller("editController", ["$scope", "$http", "authenticationServi
     }
 
     $scope.getAllFeeds = function () {
-        var currentUser = authenticationService.currentUser();
-
-        $http.get("/api/feeds/" + currentUser.username).success(function (data, status) {
+        $http.get("/api/feeds/" + authenticationService.currentUser().username).success(function (data, status) {
             $scope.feedList = data;
             setIsEditingFeed();
         }).error(function (data, status) {

@@ -1,4 +1,4 @@
-bfamRssApp.controller("userController", ["$scope", "$http", "$location", "$rootScope", "authenticationService", 
+bfamRssApp.controller("userController", ["$scope", "$http", "$location", "$rootScope", "authenticationService",
     function ($scope, $http, $location, $rootScope, authenticationService) {
         setCurrentUserState();
 
@@ -26,10 +26,12 @@ bfamRssApp.controller("userController", ["$scope", "$http", "$location", "$rootS
         $scope.logoutUser = function () {
             authenticationService.logout();
             setCurrentUserState();
-            $location.path("/");
+            $location.path("/logout");
         }
 
         $rootScope.$on('$routeChangeStart', function (event, nextRoute, currentRoute) {
+            setCurrentUserState();
+
             if ($location.path() === '/edit-feeds' && !authenticationService.isLoggedIn()) {
                 $location.path('/login');
             }

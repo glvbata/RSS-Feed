@@ -72,8 +72,9 @@ router.route("/user/register").post(function (request, response) {
     user.firstName = request.body.firstName;
     user.lastName = request.body.lastName;
     user.username = request.body.username;
-
+    user.feeds = new Array();
     user.setPassword(request.body.password);
+
     user.save(function (err) {
         var token;
         token = user.generateJwt();

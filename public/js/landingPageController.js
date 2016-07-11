@@ -17,7 +17,7 @@ bfamRssApp.controller("landingPageController", ["$scope", "$http", "$sce", "$win
         } else {
             $http.get("/api/articles/guest").success(function (data, status, header, config) {
                 $scope.articleList = data;
-            }).error(function (data, status, header, config) { });
+            }).error(function (data, status, header, config) {});
         }
     };
 

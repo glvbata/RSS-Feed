@@ -10,15 +10,17 @@ router.route("/articles/:username").get(function (request, response) {
     if (request.params.username === "guest") {
         var sourceFeedUrlList = new Array();
 
-        sourceFeedUrlList.push("http://rss.cnn.com/rss/cnn_topstories.rss");
-        //sourceFeedUrlList.push("http://kotaku.com/vip.xml");
-        //sourceFeedUrlList.push("http://feeds.feedburner.com/Destructoid");
+        sourceFeedUrlList.push("http://kotaku.com/vip.xml");
+        sourceFeedUrlList.push("http://feeds.feedburner.com/Destructoid");
 
         feedRead(sourceFeedUrlList, function (err, articles) {
             response.status(200).json(articles);
         })
     } else {
-        User.find({ username: request.params.username }, function (error, user) {
+        User.findOne({
+            username: request.params.username
+        }, function (error, user) {
+            // Default feed for user who has nothing
             if (user.feeds) {
                 var sourceFeedUrlList = new Array();
 
@@ -32,7 +34,7 @@ router.route("/articles/:username").get(function (request, response) {
                 });
             } else {
                 var sourceFeedUrlList = new Array();
-               
+
                 sourceFeedUrlList.push("http://kotaku.com/vip.xml");
                 sourceFeedUrlList.push("http://feeds.feedburner.com/Destructoid");
 
@@ -45,7 +47,9 @@ router.route("/articles/:username").get(function (request, response) {
 });
 
 router.route("/feeds/:username").get(function (request, response) {
-    User.findOne({ username: request.params.username }, function (error, user) {
+    User.findOne({
+        username: request.params.username
+    }, function (error, user) {
         if (user) {
             if (error) {
                 response.status(500).send(error);
@@ -63,28 +67,32 @@ router.route("/feeds/:username").get(function (request, response) {
 });
 
 router.route("/feeds/:username/:sourceName").get(function (request, response) {
-    User.findOne({ username: request.params.username }, function (error, user) {
-         if (error) {
+    User.findOne({
+        username: request.params.username
+    }, function (error, user) {
+        if (error) {
             response.status(500).send(error);
-         } else {
-             var feeds = user.feeds;
-   
-             if (feeds.length > 0) {
-                 for (var i = 0; i < feeds.length; i++) {
-                     if (feeds[i].sourceName.toLowerCase() === request.params.sourceName) {
-                         response.status(200).json(feeds[i]);
-                         break; // Prevent duplicate sourcename in the future.
-                     }
-                 }
-             } else {
-                 response.status(200).json("No feeds found.");
-             }
+        } else {
+            var feeds = user.feeds;
+
+            if (feeds.length > 0) {
+                for (var i = 0; i < feeds.length; i++) {
+                    if (feeds[i].sourceName.toLowerCase() === request.params.sourceName) {
+                        response.status(200).json(feeds[i]);
+                        break; // Prevent duplicate sourcename in the future.
+                    }
+                }
+            } else {
+                response.status(200).json("No feeds found.");
+            }
         }
     });
 });
 
 router.route("/feeds/:username").post(function (request, response) {
-    User.findOne({ username: request.params.username }, function (error, user) {
+    User.findOne({
+        username: request.params.username
+    }, function (error, user) {
         if (error) {
 
         } else {
@@ -109,7 +117,9 @@ router.route("/feeds/:username").post(function (request, response) {
 });
 
 router.route("/feeds/:username/:feedId").put(function (request, response) {
-    User.findOne({ username: request.params.username }, function (error, user) {
+    User.findOne({
+        username: request.params.username
+    }, function (error, user) {
         if (error) {
             response.send(error);
         } else {
@@ -141,7 +151,9 @@ router.route("/feeds/:username/:feedId").put(function (request, response) {
 });
 
 router.route("/feeds/:username/:feedId").delete(function (request, response) {
-    User.findOne({ username: request.params.username }, function (error, user) {
+    User.findOne({
+        username: request.params.username
+    }, function (error, user) {
         if (error) {
             response.send(error);
         } else {

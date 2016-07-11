@@ -1,90 +1,172 @@
 var express = require("express");
 var router = express.Router();
-var Feed = require("../models/feed.js");
 var feedRead = require("feed-read");
+var mongoose = require("mongoose");
+var User = require("../models/user.js");
+var Feed = require("../models/feed.js");
 
-router.route("/feeds/articles").get(function (request, response) {
-    Feed.find(function (error, feeds) {
-        if (error) {
-            response.status(500).send(error);
-        } else {
-            var sourceFeedUrlList = new Array();
+// If user is logged in
+router.route("/articles/:username").get(function (request, response) {
+    if (request.params.username === "guest") {
+        var sourceFeedUrlList = new Array();
 
-            feeds.forEach(function (object, i, theArray) {
-                sourceFeedUrlList.push(object.sourceFeedUrl);
+        sourceFeedUrlList.push("http://rss.cnn.com/rss/cnn_topstories.rss");
+        //sourceFeedUrlList.push("http://kotaku.com/vip.xml");
+        //sourceFeedUrlList.push("http://feeds.feedburner.com/Destructoid");
 
-                if (i === theArray.length - 1) {
-                    feedRead(sourceFeedUrlList, function (err, articles) {
-                        response.status(200).json(articles);
-                    })
+        feedRead(sourceFeedUrlList, function (err, articles) {
+            response.status(200).json(articles);
+        })
+    } else {
+        User.find({ username: request.params.username }, function (error, user) {
+            if (user.feeds) {
+                var sourceFeedUrlList = new Array();
+
+                user.feeds.forEach(function (object, i, theArray) {
+                    sourceFeedUrlList.push(object.sourceFeedUrl);
+                    if (i === theArray.length - 1) {
+                        feedRead(sourceFeedUrlList, function (err, articles) {
+                            response.status(200).json(articles);
+                        })
+                    }
+                });
+            } else {
+                var sourceFeedUrlList = new Array();
+               
+                sourceFeedUrlList.push("http://kotaku.com/vip.xml");
+                sourceFeedUrlList.push("http://feeds.feedburner.com/Destructoid");
+
+                feedRead(sourceFeedUrlList, function (err, articles) {
+                    response.status(200).json(articles);
+                })
+            }
+        });
+    }
+});
+
+router.route("/feeds/:username").get(function (request, response) {
+    User.findOne({ username: request.params.username }, function (error, user) {
+        if (user) {
+            if (error) {
+                response.status(500).send(error);
+            } else {
+                if (user.feeds.length > 0) {
+                    response.status(200).json(user.feeds);
+                } else {
+                    response.status(200).send("No feeds found.");
                 }
-            });
+            }
+        } else {
+            response.status(500).send("Found an error with user.");
         }
     });
 });
 
-router.route("/feeds").get(function (request, response) {
-    Feed.find(function (error, feeds) {
-        if (error) {
+router.route("/feeds/:username/:sourceName").get(function (request, response) {
+    User.findOne({ username: request.params.username }, function (error, user) {
+         if (error) {
             response.status(500).send(error);
-        } else {
-            response.status(200).json(feeds);
+         } else {
+             var feeds = user.feeds;
+   
+             if (feeds.length > 0) {
+                 for (var i = 0; i < feeds.length; i++) {
+                     if (feeds[i].sourceName.toLowerCase() === request.params.sourceName) {
+                         response.status(200).json(feeds[i]);
+                         break; // Prevent duplicate sourcename in the future.
+                     }
+                 }
+             } else {
+                 response.status(200).json("No feeds found.");
+             }
         }
     });
 });
 
-router.route("/feeds/:id").get(function (request, response) {
-    Feed.findById(request.params.id, function (error, feed) {
+router.route("/feeds/:username").post(function (request, response) {
+    User.findOne({ username: request.params.username }, function (error, user) {
         if (error) {
-            response.status(500).send(error);
+
         } else {
-            response.status(200).json(feed);
-        }
-    });
-});
-
-router.route("/feeds").post(function (request, response) {
-    var feed = new Feed();
-    feed.sourceName = request.body.sourceName;
-    feed.sourceFeedUrl = request.body.sourceFeedUrl;
-
-    feed.save(function (error) {
-        if (error) {
-            response.status(500).send(error);
-        } else {
-            response.status(200).send("Succesfully Added a New Feed");
-        }
-    })
-
-});
-
-router.route("/feeds/:id").put(function (request, response) {
-    Feed.findById(request.params.id, function (error, feed) {
-        if (error) {
-            response.send(error);
-        } else {
+            var feed = new Feed();
             feed.sourceName = request.body.sourceName;
             feed.sourceFeedUrl = request.body.sourceFeedUrl;
-            feed.save(function (error) {
+
+            if (user.feeds == null) {
+                user.feeds = [feed];
+            }
+
+            user.feeds.push(feed);
+            user.save(function (error) {
                 if (error) {
                     response.status(500).send(error);
                 } else {
-                    response.status(200).send("Successfully Updated Feed Information.");
+                    response.status(200).send("Succesfully Added a New Feed");
                 }
             })
-
         }
     });
 });
 
-router.route("/feeds/:id").delete(function (request, response) {
-    Feed.remove({
-        _id: request.params.id
-    }, function (error, feed) {
+router.route("/feeds/:username/:feedId").put(function (request, response) {
+    User.findOne({ username: request.params.username }, function (error, user) {
         if (error) {
-            response.status(500).send(error);
+            response.send(error);
         } else {
-            response.send("Succesfully deleted the feed");
+            var feeds = user.feeds;
+            if (feeds.length > 0) {
+                for (var i = 0; i < feeds.length; i++) {
+                    var currentId = mongoose.Types.ObjectId(feeds[i]._id).id;
+                    var parameterId = mongoose.Types.ObjectId(request.params.feedId).id;
+
+                    if (currentId === parameterId) {
+                        user.feeds[i].sourceName = request.body.sourceName;
+                        user.feeds[i].sourceFeedUrl = request.body.sourceFeedUrl;
+                        break;
+                    }
+                }
+
+                user.save(function (error) {
+                    if (error) {
+                        response.status(500).send(error);
+                    } else {
+                        response.status(200).json(feeds);
+                    }
+                });
+            } else {
+
+            }
+        }
+    });
+});
+
+router.route("/feeds/:username/:feedId").delete(function (request, response) {
+    User.findOne({ username: request.params.username }, function (error, user) {
+        if (error) {
+            response.send(error);
+        } else {
+            var feeds = user.feeds;
+            if (feeds.length > 0) {
+                for (var i = 0; i < feeds.length; i++) {
+                    var currentId = mongoose.Types.ObjectId(feeds[i]._id).id;
+                    var parameterId = mongoose.Types.ObjectId(request.params.feedId).id;
+
+                    if (currentId === parameterId) {
+                        feeds.splice(i, 1);
+                        break;
+                    }
+                }
+
+                user.save(function (error) {
+                    if (error) {
+                        response.status(500).send(error);
+                    } else {
+                        response.status(200).json(feeds);
+                    }
+                });
+            } else {
+
+            }
         }
     });
 });

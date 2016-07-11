@@ -2,6 +2,12 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var crypto = require("crypto");
 var jwt = require("jsonwebtoken");
+var Feed = require("./feed.js");
+
+var feedSchema = new Schema({
+    sourceName: String,
+    sourceFeedUrl: String
+});
 
 var userSchema = new Schema({
     firstName: {
@@ -23,6 +29,7 @@ var userSchema = new Schema({
         required: true
     },
     password: String,
+    feeds: [feedSchema],
     salt: String,
     hash: String
 });

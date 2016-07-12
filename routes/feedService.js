@@ -6,19 +6,27 @@ var User = require("../models/user.js");
 
 // If user is logged in
 router.route("/articles/:username").get(function (request, response) {
-    var getDefaultFeeds = function (response) {
+    var sendArticles = function (feeds) {
+        feedRead(feeds, function (error, articles) {
+            if (error) {
+                response.status(403).send("Something is wrong with the feeds.")
+            } else {
+                response.status(200).json(articles);
+            }
+        })
+    }
+
+    var setDefaultFeeds = function (response) {
         var sourceFeedUrlList = new Array();
 
         sourceFeedUrlList.push("http://kotaku.com/vip.xml");
         sourceFeedUrlList.push("http://feeds.feedburner.com/Destructoid");
 
-        feedRead(sourceFeedUrlList, function (err, articles) {
-            response.status(200).json(articles);
-        })
+        sendArticles(sourceFeedUrlList);
     }
 
     if (request.params.username === "guest") {
-        getDefaultFeeds(response);
+        setDefaultFeeds(response);
     } else {
         User.findOne({
             username: request.params.username
@@ -30,13 +38,11 @@ router.route("/articles/:username").get(function (request, response) {
                 user.feeds.forEach(function (object, i, theArray) {
                     sourceFeedUrlList.push(object.sourceFeedUrl);
                     if (i === theArray.length - 1) {
-                        feedRead(sourceFeedUrlList, function (err, articles) {
-                            response.status(200).json(articles);
-                        })
+                        sendArticles(sourceFeedUrlList);
                     }
                 });
             } else {
-                getDefaultFeeds(response);
+                setDefaultFeeds(response);
             }
         });
     }
